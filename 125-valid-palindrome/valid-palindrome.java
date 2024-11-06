@@ -1,26 +1,29 @@
 class Solution {
+
     public boolean isPalindrome(String s) {
-
         String lowercases = s.toLowerCase();
-        System.out.print(lowercases);
-        Deque<Character> deque = new ArrayDeque<>();
-        for(int i = 0; i < s.length(); i++) {
-            if(isAlphabet(lowercases.charAt(i))) {
-                deque.addLast(lowercases.charAt(i));
-            }
-        }
 
-        while(deque.size() > 1) { 
-            char head = deque.removeFirst();
-            char tail = deque.removeLast();
-            if (head != tail) {
+        int left = 0;
+        int right = s.length() - 1;
+        while(left < right) {
+            if(!isAlphanumeric(lowercases.charAt(left))) {
+                left++;
+                continue;
+            }
+            if(!isAlphanumeric(lowercases.charAt(right))) {
+                right--;
+                continue;
+            }
+            if(lowercases.charAt(left) != lowercases.charAt(right)) {
                 return false;
             }
+            left++;
+            right--;
         }
         return true;
     }
 
-    boolean isAlphabet(char c) {
+    boolean isAlphanumeric(char c) {
         if (c >= 'a' && c <= 'z') {
             return true;
         }
