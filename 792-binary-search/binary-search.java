@@ -1,29 +1,19 @@
 class Solution {
     public int search(int[] nums, int target) {
-        int start = 0;
-        int end = nums.length - 1;
-        int middle = (end + start) / 2;
+        int lo = 0;
+        int hi = nums.length - 1;
 
-        while (end > start) {
-            System.out.println("s: " + start + ", m:" + middle + ", e: " + end);
-            if (nums[middle] > target) {
-                end = middle - 1;
-            } else if (nums[middle] < target) {
-                start = middle + 1;
+        while (lo <= hi) {
+            int mid = (hi + lo) / 2;
+            if (nums[mid] > target) {
+                hi = mid - 1;
+            } else if (nums[mid] < target) {
+                lo = mid + 1;
             } else {
-                return middle;
+                return mid;
             }
-            middle = (end + start) / 2;
         }
-
-        if (end < 0 || start > nums.length - 1) {
-            return -1;
-        }
-
-        if (nums[end] == target) {
-            return middle;
-        }
-
+        
         return -1;
     }
 }
