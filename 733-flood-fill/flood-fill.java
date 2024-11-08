@@ -6,25 +6,22 @@ class Solution {
     }
 
     void recursive(int[][] image, int x, int y, int color, int original) {
-        if (isOutside(image, x, y)) {
+        // isOutSide
+        if (x < 0 || x > image.length -1 || y < 0 || y > image[0].length -1) {
             return;
         }
-        if(image[x][y] == color) {
+        
+        // is already colored
+        // is same color as firstColor
+        if(image[x][y] == color || original != image[x][y]) {
             return;
         }
-        if (original == image[x][y]) {
-            image[x][y] = color;
-        } else {
-            return;
-        }
+        
+        image[x][y] = color;
 
         recursive(image, x+1, y, color, original);
         recursive(image, x-1, y, color, original);
         recursive(image, x, y+1, color, original);
         recursive(image, x, y-1, color, original);
-    }
-
-    boolean isOutside(int[][] matrix, int x, int y) {
-        return (x < 0 || x > matrix.length -1 || y < 0 || y > matrix[0].length -1);
     }
 }
