@@ -9,40 +9,46 @@
  * }
  */
 class Solution {
-    public ListNode mergeTwoLists(ListNode list1, ListNode list2) {
-        /*
-        result = new ListNode();
-        cursor = result;
-        loop : until list1 is null or list2 is null
-            compare each head
-            if list1's head is smaller
-                add list1's head to cursor's next
-                move cursor next
-                update list1 (delete head)
-            if list2's head is smaller
-                add list2's head to cursor's next
-                move cursor next
-                update list2 (delete head)
-        end loop
+    public ListNode mergeTwoLists(ListNode n1, ListNode n2) {
+    ListNode result;
+    ListNode tail;
 
-        add left list to cursor
-        */
+    if (n1 == null) {
+      return n2;
+    }
 
-        ListNode result = new ListNode();
-        ListNode cursor = result;
+    if (n2 == null) {
+      return n1;
+    }
 
-        while(list1 != null && list2 != null) {
-            if (list1.val < list2.val) {
-                cursor.next = list1;
-                list1 = list1.next;
-            } else {
-                cursor.next = list2; // 
-                list2 = list2.next;
-            }
-            cursor = cursor.next;
-        }
+    if (n1.val <= n2.val) {
+      result = n1;
+      tail = n1;
+      n1 = n1.next;
+    } else {
+      result = n2;
+      tail = n2;
+      n2 = n2.next;
+    }
+    // n1 (2)
+    // n2 (1) -> (3)
+    while (n1 != null && n2 != null) {
+      if (n1.val <= n2.val) {
+        tail.next = n1;
+        n1 = n1.next;
+      } else {
+        tail.next = n2;
+        n2 = n2.next;
+      }
+      tail = tail.next;
+    }
 
-        cursor.next = (list1 == null ? list2 : list1);
-        return result.next;
+    if (n1 == null) {
+      tail.next = n2;
+    } else {
+      tail.next = n1;
+    }
+    return result;
+
     }
 }
