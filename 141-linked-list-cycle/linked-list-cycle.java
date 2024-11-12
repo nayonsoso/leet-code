@@ -16,7 +16,6 @@ public class Solution {
             if(set.contains(head)) {
                 return true;
             }
-            System.out.println("current:" + head.val);
             set.add(head);
             head = head.next;
         }
