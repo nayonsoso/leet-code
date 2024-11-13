@@ -8,86 +8,32 @@ empty : if two staks are both empty
 
 class MyQueue {
 
-    Stack<Integer> s1 = new Stack<>();
-    Stack<Integer> s2 = new Stack<>();
+    Stack<Integer> queue = new Stack<>();
+    Stack<Integer> tmp = new Stack<>();
 
     public MyQueue() {
     }
     
     public void push(int x) {
-        Stack<Integer> emptyStack = getEmptyStack();
-        if(emptyStack == s1) {
-            s2.push(x);
-        } else {
-            s1.push(x);
+        while(!queue.isEmpty()) {
+            tmp.push(queue.pop());
+        }
+        queue.push(x);
+        while(!tmp.isEmpty()) {
+            queue.push(tmp.pop());
         }
     }
     
     public int pop() {
-        Stack<Integer> emptyStack = getEmptyStack();
-        if(emptyStack == s1) {
-            while(!s2.isEmpty()) {
-                s1.push(s2.pop());
-            }
-            int result = s1.pop();
-            while(!s1.isEmpty()) {
-                s2.push(s1.pop());
-            }
-            return result;
-        } else if (emptyStack == s2) {
-            while(!s1.isEmpty()) {
-                s2.push(s1.pop());
-            }
-            int result =  s2.pop();
-            while(!s2.isEmpty()) {
-                s1.push(s2.pop());
-            }
-            return result;
-        } else {
-            throw new RuntimeException("queue is empty, can't pop");
-        }
+        return queue.pop();
     }
     
     public int peek() {
-        Stack<Integer> emptyStack = getEmptyStack();
-        if(emptyStack == s1) {
-            while(!s2.isEmpty()) {
-                s1.push(s2.pop());
-            }
-            int result = s1.peek();
-            while(!s1.isEmpty()) {
-                s2.push(s1.pop());
-            }
-            return result;
-        } else if (emptyStack == s2) {
-            while(!s1.isEmpty()) {
-                s2.push(s1.pop());
-            }
-            int result = s2.peek();
-            while(!s2.isEmpty()) {
-                s1.push(s2.pop());
-            }
-            return result;
-        } else {
-            throw new RuntimeException("queue is empty, can't peek");
-        }
+        return queue.peek();
     }
     
     public boolean empty() {
-        if(getEmptyStack() == null) {
-            return true;
-        }
-        return false;
-    }
-
-    private Stack<Integer> getEmptyStack() {
-        if(s1.isEmpty() && !s2.isEmpty()) {
-            return s1;
-        } else if (s2.isEmpty() && !s1.isEmpty()) {
-            return s2;
-        } else {
-            return null;
-        }
+        return queue.isEmpty();
     }
 }
 
