@@ -1,20 +1,18 @@
 class Solution {
     public int[] searchRange(int[] nums, int target) {
+        int[] answer = { -1, -1 };
         if (nums.length == 0) {
-            int[] idxNotFound = { -1, -1 };
-            return idxNotFound;
+            return answer;
         }
 
         int anyIdx = findAnyIdx(nums, target);
         if (anyIdx == -1) {
-            int[] idxNotFound = { -1, -1 };
-            return idxNotFound;
-        } else {
-            int[] answer = new int[2];
-            answer[0] = findStartIdx(nums, anyIdx);
-            answer[1] = findLastIdx(nums, anyIdx);
             return answer;
         }
+
+        answer[0] = findStartIdx(nums, anyIdx);
+        answer[1] = findLastIdx(nums, anyIdx);
+        return answer;
     }
 
     int findAnyIdx(int[] nums, int target) {
@@ -58,10 +56,8 @@ class Solution {
         int start = anyIdx;
         int end = nums.length - 1;
 
-        while (start < end) { // start:0 end:1
-            int middle = (start + end + 1) / 2; // middle: 1
-            System.out.println("start:" + start + "(" + nums[start]+ 
-            "), end:" + end + "(" + nums[end] + "), middle:" + middle + "(" + nums[middle] + ")");
+        while (start < end) {
+            int middle = (start + end + 1) / 2;
             if (nums[middle] == nums[anyIdx]) {
                 start = middle;
             } else {
