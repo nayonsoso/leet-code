@@ -1,19 +1,23 @@
 class Solution {
     public int search(int[] nums, int target) {
-        int lo = 0;
-        int hi = nums.length - 1;
+        int l = -1;
+        int r = nums.length;
 
-        while (lo <= hi) {
-            int mid = (hi + lo) / 2;
-            if (nums[mid] > target) {
-                hi = mid - 1;
-            } else if (nums[mid] < target) {
-                lo = mid + 1;
+        while(l + 1 < r) {
+            int m = (l + r) / 2;
+            if (nums[m] < target) {
+                l = m;
+            } else if (nums[m] > target) {
+                r = m;
             } else {
-                return mid;
+                return m;
             }
         }
-        
+
         return -1;
     }
 }
+
+// sorted in ascending order
+// if target exist, return target's idx
+// if not, return -1
