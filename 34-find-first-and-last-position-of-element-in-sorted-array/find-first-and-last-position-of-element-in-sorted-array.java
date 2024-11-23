@@ -18,7 +18,6 @@ class Solution {
                 start = middle + 1;
             } else {
                 answer[0] = Solution.findFirstIdx(nums, middle);
-                System.out.println(answer[0]);
                 answer[1] = Solution.findLastIdx(nums, middle);
                 return answer;
             }
@@ -28,46 +27,34 @@ class Solution {
     }
 
     private static int findFirstIdx(int[] nums, int any) {
-        int start = 0;
-        int end = any;
+        int start = -1;
+        int end = any + 1;
         int target = nums[any];
 
-        while (start <= end) {
+        while (start + 1 < end) {
             int middle = (start + end) / 2;
-            if (target < nums[middle]) {
-                end = middle - 1;
-            } else if (nums[middle] < target) {
-                start = middle + 1;
+            if (nums[middle] < target) {
+                start = middle;
             } else {
-                if (start == middle) {
-                    return start;
-                }
                 end = middle;
             }
         }
-        return -1;
+        return end;
     }
 
     private static int findLastIdx(int[] nums, int any) {
-        int start = any;
-        int end = nums.length - 1;
+        int start = any - 1;
+        int end = nums.length;
         int target = nums[any];
 
-        while (start <= end) {
+        while (start + 1 < end) {
             int middle = (start + end) / 2;
             if (target < nums[middle]) {
-                end = middle - 1;
+                end = middle;
             } else {
-                if(start == middle) {
-                    if(nums[end] == target) {
-                        return end;
-                    } else {
-                        return start;
-                    }
-                }
                 start = middle;
             }
         }
-        return -1;
+        return start;
     }
 }
