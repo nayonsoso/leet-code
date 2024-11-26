@@ -1,20 +1,18 @@
 class Solution {
-
-    int[] arr = new int[46];
-
     public int climbStairs(int n) {
-        if (n == 1) {
-            return 1;
-        }
-        if (n == 2) {
-            return 2;
-        }
+        int first = 1;
+        int second = 2;
+        int third = 0;
 
-        if (arr[n] != 0) {
-            return arr[n];
+        if (n == 1) return 1;
+        if (n == 2) return 2;
+        
+        // 1, 2, 3, 5, 8, 13
+        for(int i = 0; i < n-2 ; i++) {
+            third = first + second;
+            first = second;
+            second = third;
         }
-
-        arr[n] = climbStairs(n-1) + climbStairs(n-2);
-        return arr[n];
+        return third;
     }
 }
