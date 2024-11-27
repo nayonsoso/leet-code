@@ -11,36 +11,31 @@
 
 /**
 [1,2,3]
-Node(1) -> Node(2) -> Node(3)
-  head
 
-- reach to tail -> new head
-- stack<Node> {Node(3), Node(2), Node(1)}
+    Node(1) -> Node(2) -> Node(3) ->
+ <- Node(1)    Node(2) -> Node(3) ->
+ <- Node(1) <- Node(2)    Node(3) ->
+ <- Node(1) <- Node(2) <- Node(3)
+
+cur : 앞으로 한칸씩 전진
+그런데 문제는 방향이 후퇴하고 있으므로 연결이 끊어짐
+
+
 */
 
 class Solution {
     public ListNode reverseList(ListNode head) {
-        Deque<ListNode> deque = new LinkedList<>();
         ListNode cur = head; // cur:Node(1)
-        while(cur != null) { // false
-            deque.push(cur); // deque:Node(3),Node(2), Node(1)
-            cur = cur.next; // cur:null
+        ListNode next = null;
+        ListNode past = null;
+
+        while(cur != null) {
+            next = cur.next;
+            cur.next = past;
+            past = cur;
+            cur = next;
         }
 
-        if(head == null || head.next == null) {
-            return head;
-        }
-
-        ListNode i = deque.pop(); // deque:
-        ListNode newHead = i;
-        while(!deque.isEmpty()) { // true
-           ListNode j = deque.pop(); // j:Node(1)
-           i.next = j; // list:Node(3) -> Node(2) <-> Node(1)
-           i = j;
-        }
-        
-        // Node(3) -> Node(2) -> Node(1) -> null
-        i.next = null;
-        return newHead;
+        return past;
     }
 }
