@@ -1,57 +1,61 @@
 class Solution {
     public String addBinary(String a, String b) {
-        return Solution.addBinary1(a,b);
+        return Solution.addBinary1(a, b);
     }
 
     static String addBinary1(String a, String b) {
-        String[] preprocessed = makeLengthSame(a, b);
-        String a_ = preprocessed[0];
-        System.out.println(a_);
-        String b_ = preprocessed[1];
-        System.out.println(b_);
+        boolean[][] preprocessed = makeLengthSame(a, b);
+        boolean[] a_ = preprocessed[0];
+        boolean[] b_ = preprocessed[1];
 
-        int idx = a_.length() - 1;
+        int idx = a_.length - 1;
 
         boolean carry = false;
-        char[] result = new char[idx + 1];
+        boolean[] result = new boolean[idx + 2];
         while (idx >= 0) {
-            int sum = (a_.charAt(idx) - '0') + (b_.charAt(idx) - '0');
-            if (carry) {
-                sum++;
-            }
-
-            System.out.println(sum);
-
-            if (sum > 1) {
-                carry = true;
-                result[idx] = sum == 2 ? '0' : '1';
-            } else {
-                carry = false;
-                result[idx] = (char) (sum + '0');
+            if (a_[idx] == b_[idx]) {
+                result[idx + 1] = carry;
+                carry = a_[idx];
+            } else if (a_[idx] != b_[idx]) {
+                result[idx + 1] = !carry;
             }
             idx--;
         }
+        result[0] = carry;
 
-        if (result[0] == '0') {
-            String answer = "";
-            for (int i = 1; i < result.length; i++) {
-                answer += result[i];
-            }
-            return answer;
+        StringBuilder answer = new StringBuilder();
+        int boundary = 0;
+        if (!result[0]) {
+            boundary = 1;
         }
-        return new String(result);
+        System.out.print(boundary);
+        System.out.print(result.length);
+        for (int i = boundary; i < result.length; i++) {
+            answer.append(result[i] ? "1" : "0");
+        }
+        return answer.toString();
     }
 
-    static String[] makeLengthSame(String a, String b) {
+    static boolean[][] makeLengthSame(String a, String b) {
         int aLength = a.length();
         int bLength = b.length();
-        String[] result = new String[2];
+        int maxLength = Math.max(aLength, bLength);
+
+        boolean[][] result = new boolean[2][maxLength];
         if (aLength > bLength) {
-            result[0] = "0" + a;
-            result[1] = "0".repeat(aLength - bLength + 1) + b;
+            for (int i = 0; i < aLength; i++) {
+                result[0][i] = (a.charAt(i) == '0' ? false : true);
+            }
+            for (int i = 0; i < bLength; i++) {
+                result[1][aLength - bLength + i] = (b.charAt(i) == '0' ? false : true);
+            }
         } else {
-            result[0] = "0".repeat(bLength - aLength + 1) + a;
-            result[1] = "0" + b; // 011
+            for (int i = 0; i < aLength; i++) {
+                result[0][bLength - aLength + i] = (a.charAt(i) == '0' ? false : true);
+            }
+            for (int i = 0; i < bLength; i++) {
+                result[1][i] = (b.charAt(i) == '0' ? false : true);
+            }
         }
         return result;
     }
