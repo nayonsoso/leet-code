@@ -1,10 +1,9 @@
 class Solution {
     public int[] searchRange(int[] arr, int target) {
-        int leftBound = getLeftBound(arr, target);
-        int firstPosition = leftBound + 1;
+        int firstPosition = getLeftBound(arr, target) + 1;
         int lastPosition = getLeftBound(arr, target + 1);
         if (firstPosition < arr.length && arr[firstPosition] == target) {
-            return new int[] { firstPosition, lastPosition };
+            return new int[] { firstPosition , lastPosition };
         }
         return new int[] { -1, -1 };
     }
