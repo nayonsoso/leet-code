@@ -1,49 +1,36 @@
 class Solution {
-    public long totalCost(int[] costs, int sessions, int candidates) {
-        PriorityQueue<Integer> leftCosts = new PriorityQueue<>();
-        PriorityQueue<Integer> rightCosts = new PriorityQueue<>();
+    public static long totalCost(int[] costs, int k, int candidates) {
+        int n = costs.length;
+        long total = 0L;
+        PriorityQueue<Integer> leftPQ = new PriorityQueue<>();
+        PriorityQueue<Integer> rightPQ = new PriorityQueue<>();
 
-        int left = 0;
-        while (left < candidates) {
-            leftCosts.offer(costs[left++]);
-        }
+        // pointer : inclusive
+        int left = -1;
+        int right = n;
 
-        int right = costs.length - 1;
-        while (right >= Math.max(left, costs.length - candidates)) {
-            rightCosts.offer(costs[right--]);
-        }
-
-        long totalCost = 0;
-        for (int i = 0; i < sessions; i++) {
-            int currentCost;
-
-            if (!rightCosts.isEmpty() && !leftCosts.isEmpty()) {
-                int minLeft = leftCosts.peek();
-                int minRight = rightCosts.peek();
-                currentCost = Math.min(minLeft, minRight);
-
-                if (minLeft <= minRight) {
-                    leftCosts.poll();
-                    if (left <= right) {
-                        leftCosts.offer(costs[left++]);
-                    }
-                } else {
-                    rightCosts.poll();
-                    if (left <= right) {
-                        rightCosts.offer(costs[right--]);
-                    }
-                }
-            } else if (rightCosts.isEmpty()) {
-                currentCost = leftCosts.peek();
-                leftCosts.poll();
-            } else {
-                currentCost = rightCosts.peek();
-                rightCosts.poll();
+        for (int i = 0; i < k; i++) {
+            // 항상 후보의 수만큼을 가지고 있으려 하지만, left와 right가 같으면 더 이상 넣지 않는다.
+            // 처음 초기화하고 시작하는게 아니라, for 문에서 넣어주면 헷갈림을 더욱 줄일 수 있다.
+            while (leftPQ.size() < candidates && left + 1< right) {
+                leftPQ.offer(costs[++left]);
+            }
+            while (rightPQ.size() < candidates && left + 1< right) {
+                rightPQ.offer(costs[--right]);
             }
 
-            totalCost += currentCost;
+            // 분배가 다 되었다고 생각하면, 이후의 작업이 더 쉬워진다.
+            if (leftPQ.isEmpty()) {
+                total += rightPQ.poll();
+            } else if (rightPQ.isEmpty()) {
+                total += leftPQ.poll();
+            } else if (leftPQ.peek() <= rightPQ.peek()) { // 최소값이 작다면, leftPQ에서 없애기
+                total += leftPQ.poll();
+            } else {
+                total += rightPQ.poll();
+            }
         }
 
-        return totalCost;
+        return total;
     }
 }
