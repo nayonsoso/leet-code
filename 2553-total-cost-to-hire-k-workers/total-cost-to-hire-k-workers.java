@@ -1,42 +1,47 @@
 class Solution {
-public long totalCost(int[] costs, int k, int candidates) {
-        int n = costs.length;
-        long totalCost = 0;
-        
-        // 최소 힙 (우선순위 큐)
-        PriorityQueue<Integer> leftHeap = new PriorityQueue<>();
-        PriorityQueue<Integer> rightHeap = new PriorityQueue<>();
-        
-        int left = 0;  // 왼쪽 포인터
-        int right = n - 1; // 오른쪽 포인터
+    public long totalCost(int[] costs, int sessions, int candidates) {
+        PriorityQueue<Integer> leftCosts = new PriorityQueue<>();
+        PriorityQueue<Integer> rightCosts = new PriorityQueue<>();
 
-        // 앞쪽 candidates명을 최소 힙에 삽입
+        int left = 0;
         while (left < candidates) {
-            leftHeap.offer(costs[left++]);
-        }
-        
-        // 뒤쪽 candidates명을 최소 힙에 삽입 (겹치지 않는 경우만)
-        while (right >= Math.max(left, n - candidates)) {
-            rightHeap.offer(costs[right--]);
+            leftCosts.offer(costs[left++]);
         }
 
-        // k명 고용
-        for (int i = 0; i < k; i++) {
-            if (!leftHeap.isEmpty() && (rightHeap.isEmpty() || leftHeap.peek() <= rightHeap.peek())) {
-                totalCost += leftHeap.poll(); // 왼쪽에서 최소 비용 선택
-                
-                // 새로운 후보 추가
-                if (left <= right) {
-                    leftHeap.offer(costs[left++]);
+        int right = costs.length - 1;
+        while (right >= Math.max(left, costs.length - candidates)) {
+            rightCosts.offer(costs[right--]);
+        }
+
+        long totalCost = 0;
+        for (int i = 0; i < sessions; i++) {
+            int currentCost;
+
+            if (!rightCosts.isEmpty() && !leftCosts.isEmpty()) {
+                int minLeft = leftCosts.peek();
+                int minRight = rightCosts.peek();
+                currentCost = Math.min(minLeft, minRight);
+
+                if (minLeft <= minRight) {
+                    leftCosts.poll();
+                    if (left <= right) {
+                        leftCosts.offer(costs[left++]);
+                    }
+                } else {
+                    rightCosts.poll();
+                    if (left <= right) {
+                        rightCosts.offer(costs[right--]);
+                    }
                 }
+            } else if (rightCosts.isEmpty()) {
+                currentCost = leftCosts.peek();
+                leftCosts.poll();
             } else {
-                totalCost += rightHeap.poll(); // 오른쪽에서 최소 비용 선택
-                
-                // 새로운 후보 추가
-                if (left <= right) {
-                    rightHeap.offer(costs[right--]);
-                }
+                currentCost = rightCosts.peek();
+                rightCosts.poll();
             }
+
+            totalCost += currentCost;
         }
 
         return totalCost;
