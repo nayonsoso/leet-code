@@ -1,15 +1,5 @@
 class Solution {
 
-    class Node {
-        int position;
-        int count;
-
-        Node(int position, int count) {
-            this.position = position;
-            this.count = count;
-        }
-    }
-
     public int snakesAndLadders(int[][] board) {
         int[] arr = flattenMatrix(board);
         int answer = solve(arr);
@@ -17,36 +7,40 @@ class Solution {
     }
 
     public int solve(int[] arr) {
-        Queue<Node> queue = new LinkedList<>();
+        Queue<Integer> queue = new LinkedList<>();
         boolean[] visited = new boolean[arr.length];
-        int n = arr.length - 1;
+        int end = arr.length - 1;
 
-        // add start at queue
         int start = 1;
-        queue.add(new Node(start, 0));
+        queue.add(start);
         visited[start] = true;
 
+        int moves = 0;
         while (!queue.isEmpty()) {
-            Node now = queue.poll();
-            if (now.position == n) {
-                return now.count;
+            int size = queue.size();
+            for (int k = 0; k < size; k++) {
+                int now = queue.poll();
+                if (now == end) {
+                    return moves;
+                }
+
+                for (int i = 1; i <= 6; i++) {
+                    int nextPosition = now + i;
+                    if (nextPosition > end) {
+                        continue;
+                    }
+
+                    if (arr[nextPosition] != nextPosition) {
+                        nextPosition = arr[nextPosition];
+                    }
+
+                    if (!visited[nextPosition]) {
+                        queue.add(nextPosition);
+                        visited[nextPosition] = true;
+                    }
+                }
             }
-
-            for (int i = 1; i <= 6; i++) { // rolling dice once
-                int nextPosition = now.position + i;
-                if (nextPosition > n) {
-                    continue;
-                }
-
-                if (arr[nextPosition] != nextPosition) {
-                    nextPosition = arr[nextPosition];
-                }
-
-                if (!visited[nextPosition]) {
-                    queue.add(new Node(nextPosition, now.count + 1));
-                    visited[nextPosition] = true;
-                }
-            }
+            moves++;
         }
 
         return -1;
@@ -54,18 +48,15 @@ class Solution {
 
     int[] flattenMatrix(int[][] board) {
         int n = board.length;
-        int[] arr = new int[n * n + 1]; // value at board is one-base counting
-        int idx = 1;
+        int[] arr = new int[n * n + 1];
 
+        int idx = 1;
         int direction = 1;
+
         for (int i = n - 1; i >= 0; i--) {
             int j = (direction == 1) ? 0 : n - 1;
             for (int k = 0; k < n; k++) {
-                if (board[i][j] == -1) {
-                    arr[idx] = idx;
-                } else {
-                    arr[idx] = board[i][j];
-                }
+                arr[idx] = (board[i][j] == -1) ? idx : board[i][j];
                 j += direction;
                 idx++;
             }
